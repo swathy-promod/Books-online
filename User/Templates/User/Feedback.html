@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef;
+        }
+
+        .box {
+            width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+        <h2>💬 Feedback</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="content" placeholder="Write your feedback..." required></textarea>
+            <button type="submit">Send</button>
+        </form>
+
+    </div>
+</body>
+
+</html>

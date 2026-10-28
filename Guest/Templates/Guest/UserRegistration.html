@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #012927, #0d2e2c);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #fff;
+            width: 360px;
+            /* reduced */
+            padding: 15px;
+            /* reduced */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 8px;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 6px;
+            margin-top: 3px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .gender {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .gender input {
+            width: auto;
+        }
+
+        button {
+            width: 100%;
+            padding: 7px;
+            border: none;
+            background: #073530;
+            color: white;
+            font-size: 13px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2a747e;
+        }
+
+        .table-container {
+            margin-top: 10px;
+            max-height: 120px;
+            /* reduced */
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: center;
+        }
+
+        th {
+            background: #083936;
+            color: white;
+        }
+
+        img {
+            width: 30px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>User Registration</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="txtname" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="txtEmail" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="txtpass" required>
+            </div>
+
+            <div class="form-group">
+                <label>Contact</label>
+                <input type="text" name="txtcontact" required>
+            </div>
+
+            <!-- <div class="form-group">
+                <label>Address</label>
+                <textarea name="txtaddress" rows="1"></textarea>
+            </div> -->
+
+            <!-- <div class="form-group">
+                <label>DOB</label>
+                <input type="date" name="txtdob" required>
+            </div> -->
+
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="gender">
+                    <label><input type="radio" name="gender" value="Male"> M</label>
+                    <label><input type="radio" name="gender" value="Female"> F</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>District</label>
+                <select name="dis">
+                    <option>--Select--</option>
+                    {% for i in disData %}
+                    <option value="{{i.id}}">{{i.district_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Place</label>
+                <select name="pla">
+                    <option>--Select--</option>
+                    {% for i in pla %}
+                    <option value="{{i.id}}">{{i.place_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea name="txtbio" rows="2" placeholder="Short bio"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Photo</label>
+                <input type="file" name="txtfile">
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+
+    </div>
+
+</body>
+
+</html>

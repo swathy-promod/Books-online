@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(to right, #e0f7f1, #ffffff);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0a3a29;
+            margin-top: 30px;
+        }
+
+        /* FORM CARD */
+        .form-box {
+            width: 380px;
+            margin: 30px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-top: 10px;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        select:focus,
+        input[type="text"]:focus {
+            border-color: #0f3b2d;
+            box-shadow: 0 0 5px rgba(15,59,45,0.5);
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background: #0f3b2d;
+            border: none;
+            color: white;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background: #0d493c;
+        }
+
+        /* TABLE */
+        .table-container {
+            width: 75%;
+            margin: 30px auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #0a3a29;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        tr:hover {
+            background: #e6f7f2;
+        }
+
+        /* ACTION BUTTONS */
+        .action a {
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin: 2px;
+            color: white;
+        }
+
+        .edit {
+            background: #2ecc71;
+        }
+
+        .delete {
+            background: #e74c3c;
+        }
+
+        .edit:hover {
+            background: #27ae60;
+        }
+
+        .delete:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Place</h1>
+    <!-- FORM -->
+    <div class="form-box">
+        <form method="post">
+            {% csrf_token %}
+
+            <label>District</label>
+            <select name="dis" required>
+                <option value="">-- Select District --</option>
+                {% for i in disData %}
+                <option value="{{ i.id }}"
+                    {% if data.district_id.id == i.id %}
+                        selected
+                    {% endif %}
+                >
+                    {{ i.district_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <label>Place</label>
+            <input type="text" name="txtplace" value="{{ data.place_name|default:'' }}" required>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <!-- TABLE -->
+    <h1>Places List</h1>
+
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Sl No</th>
+                <th>District</th>
+                <th>Place</th>
+                <th>Action</th>
+            </tr>
+
+            {% for i in pla %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.district_id.district_name}}</td>
+                <td>{{i.place_name}}</td>
+                <td class="action">
+                    <a href="{% url 'Admin:PlaceEdit' i.id %}" class="edit">Edit</a>
+                    <a href="{% url 'Admin:PlaceDelete' i.id %}" class="delete">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>

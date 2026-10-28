@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f5f5;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background: green;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            cursor: pointer;
+
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="cart-box">
+        <form method="post">
+            {% csrf_token %}
+
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+
+                {% for i in cart %}
+                <tr>
+                    <td>{{ i.product.product_name }}</td>
+                    <td>₹{{ i.product.product_price }}</td>
+                    <td>
+                        <button type="button" onclick="changeQty(this, -1)">-</button>
+
+                        <input type="number" value="{{ i.cart_qnty }}" min="1" class="qty">
+
+                        <button type="button" onclick="changeQty(this, 1)">+</button>
+                    </td>
+                    <td class="row-total">₹{{ i.subtotal }}</td>
+                </tr>
+                {% endfor %}
+
+                <tr>
+                    <td colspan="3"><b>Grand Total</b></td>
+                    <td><b class="grand-total">₹{{ total }}</b></td>
+                </tr>
+            </table>
+
+            <td><b class="grand-total">₹{{ total }}</b></td>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="Book Now">
+                </td>
+            </tr>
+
+        </form>
+    </div>
+    <script>
+        function changeQty(btn, change) {
+            let row = btn.closest("tr");
+
+            let qtyInput = row.querySelector(".qty");
+            let price = parseFloat(row.children[1].innerText.replace('₹', ''));
+
+            let qty = parseInt(qtyInput.value) + change;
+            if (qty < 1) qty = 1;
+
+            qtyInput.value = qty;
+
+            // ✅ Update row total
+            let total = price * qty;
+            row.querySelector(".row-total").innerText = "₹" + total;
+
+            updateGrandTotal();
+        }
+
+        function updateGrandTotal() {
+            let totals = document.querySelectorAll(".row-total");
+            let sum = 0;
+
+            totals.forEach(t => {
+                sum += parseFloat(t.innerText.replace('₹', ''));
+            });
+
+            document.querySelector("h3").innerText = "Total: ₹" + sum;
+        }
+    </script>
+</body>
+
+</html>

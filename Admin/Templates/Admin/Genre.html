@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Genre Management</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #1c4b38;
+            color: white;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .edit {
+            background: rgb(19, 67, 53);
+        }
+
+        .delete {
+            background: rgb(146, 44, 0);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Genre Management</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- <input type="text" name="txtgenreid" placeholder="Enter Genre ID"
+               value="{{ editdata.genre_id|default:'' }}"> -->
+        <select name="sel_category">
+            <option value="">-- Select Category --</option>
+            {% for c in category %}
+                <option value="{{ c.id }}"
+                    {% if editdata.category_id.id == c.id %}selected{% endif %}>
+                    {{ c.category_name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <input type="text" name="txtgenrename" placeholder="Enter Genre Name"
+               value="{{ editdata.genre_name|default:'' }}">
+
+        
+        <button type="submit">
+            {% if editdata %}Update{% else %}Add{% endif %}
+        </button>
+
+    </form>
+
+    <table>
+        <tr>
+            <th>Sl No</th>
+            <th>Category</th>
+            <th>Genre</th>
+            <th>Action</th>
+        </tr>
+
+        {% for g in genre %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{ g.category_id.category_name }}</td>
+            <td>{{ g.genre_name }}</td>
+            <td>
+                <a href="{% url 'Admin:GenreEdit' g.id %}" class="edit">Edit</a>
+                <a href="{% url 'Admin:GenreDelete' g.id %}" class="delete">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+</html>
+

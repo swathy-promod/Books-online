@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #0e4c31, #043d32);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #0b4140;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        img {
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .price {
+            color: green;
+            font-weight: bold;
+        }
+
+        .desc {
+            font-size: 12px;
+            color: #555;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 3px;
+            padding: 6px 10px;
+            background: #0b4140;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .btn:hover {
+            background: #369984;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Available Products</h1>
+    <div class="container">
+
+        <form method="post">
+
+
+            <table>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <!-- <th>Description</th> -->
+                    <th>Type</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for p in products %}
+                <tr>
+                    <td>
+                        <img src="{{ p.product_photo.url }}" width="80" height="80">
+                    </td>
+                    <td>{{ p.product_name }}</td>
+                    <td class="price">₹ {{ p.product_price }}</td>
+
+
+
+                    <td>{{ p.type_id.type_name }}</td>
+
+                    <td>
+                        <a href="{% url 'User:AddToCart' p.id %}" class="btn">Add to Cart</a>
+                        <a href="{% url 'User:Booking' p.id %}" class="btn">Book Now</a>
+                
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </form>
+    </div>
+</body>
+
+</html>

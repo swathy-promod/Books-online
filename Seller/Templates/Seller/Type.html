@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Type</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            padding: 30px;
+        }
+
+        .card {
+            width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        td, th {
+            padding: 10px;
+            text-align: center;
+        }
+
+        a {
+            color: red;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Type</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="txt_name" placeholder="Enter Type">
+        <button type="submit">Add Type</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>Sl No</th>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+
+        {% for i in data %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.type_name}}</td>
+            <td><a href="{% url 'Seller:DeleteType' i.id %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

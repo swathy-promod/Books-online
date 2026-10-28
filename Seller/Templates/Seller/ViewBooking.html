@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViewBooking</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(to right, #3ca9a4, #2f8f8a);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #0a3732;
+        }
+
+        .container {
+            width: 85%;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        /* Table Styling */
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .booking-table th {
+            background: #144845;
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .booking-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Zebra rows */
+        .booking-table tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        /* Highlight first column */
+        .booking-table td:first-child {
+            background: #e8f6f5;
+            font-weight: bold;
+        }
+
+        /* Image styling */
+        .booking-table img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        /* Hover effect */
+        .booking-table tr:hover {
+            background: #dff5f3;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <h2 align="center">View Bookings</h2>
+    <table border="1" align="center">
+        <tr>
+            <td>SlNo</td>
+            <td>UserName</td>
+            <td>Product</td>
+            <td>Photo</td>
+            <td>Amount</td>
+        </tr>
+        {% for i in bookingdata %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.user.user_name }}</td>
+            <td>{{ i.product.product_name }}</td>
+            <td><img src="{{ i.product.product_photo.url }}" width="80"></td>
+            <td>{{ i.booking_amount }}</td>
+        </tr>
+        {% endfor %}
+    </table> -->
+
+    <body>
+
+        <h1>View Bookings</h1>
+
+        <div class="container">
+            <table class="booking-table">
+                <tr>
+                    <th>Sl No</th>
+                    <th>UserName</th>
+                    <th>Product</th>
+                    <th>Photo</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for i in bookingdata %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.user.user_name }}</td>
+                    <td>{{ i.product.product_name }}</td>
+                    <td>
+                        <img src="{{ i.product.product_photo.url }}">
+                    </td>
+                    <td>{{ i.booking_amount }}</td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+
+    </body>
+
+</html>

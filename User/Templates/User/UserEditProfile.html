@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #0a3c37, #104f44);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            width: 420px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #0a3e37;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #19473c;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #116240;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Edit Profile</h1>
+
+        <form method="post" enctype="multipart/form-data">         
+            {% csrf_token %}
+
+            <table>
+
+                <tr>
+                    <td>Name</td>
+                    <td><input type="text" name="txt_name" value="{{data.user_name}}"></td>
+                </tr>
+
+                <tr>
+                    <td>Email</td>
+                    <td>
+                        <input type="email" name="txt_email" value="{{data.user_email}}">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Contact</td>
+                    <td><input type="numbers" name="txt_contact" value="{{data.user_contact}}"></td>
+                </tr>
+                
+                 
+                <tr>
+                    <td>Biography</td>
+                    <td><input type="text" name="txt_bio" value="{{data.user_bio}}"></td>
+                </tr>
+
+                <tr>
+                    <td>District</td>
+                    <td>
+                        <select name="district" id="district">
+                            <option value="">--select--</option>
+                            {% for d in district %}
+                            <option value="{{d.id}}" {% if data.place and d.id == data.place.district_id.id %}selected{% endif %}>
+                                {{d.district_name}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Place</td>
+                    <td>
+                        <select name="place" id="place">
+                            <option value="">--select--</option>
+                            {% for p in place %}
+                            <option value="{{p.id}}" {% if data.place and p.id == data.place.id %}selected{% endif %}>
+                                {{p.place_name}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit">Update Profile</button>
+                    </td>
+                </tr>
+
+            </table>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#district").change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'Guest:ajaxplace' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, },
+            success: function (data) {
+                $("#place").html(data);
+            },
+        });
+    });
+</script>

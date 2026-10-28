@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Profile</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f4c5c, #1b262c);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 450px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #0f4c5c;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            width: 45%;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            margin: 5px;
+            color: white;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .edit-btn {
+            background: #28a745;
+        }
+
+        .pass-btn {
+            background: #007bff;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+        }
+
+        .buttons a:hover {
+            opacity: 0.85;
+        }
+
+        .file-link {
+            font-size: 13px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Seller Profile</h2>
+
+    <!-- Profile Image -->
+    {% if seller.seller_photo %}
+        <img src="{{seller.seller_photo.url}}" class="profile-img">
+    {% else %}
+        <p>No Image</p>
+    {% endif %}
+
+    <table>
+        <tr>
+            <td>Name</td>
+            <td>{{seller.seller_name}}</td>
+        </tr>
+
+        <tr>
+            <td>Email</td>
+            <td>{{seller.seller_email}}</td>
+        </tr>
+
+        <tr>
+            <td>Contact</td>
+            <td>{{seller.seller_contact}}</td>
+        </tr>
+
+        <tr>
+            <td>Address</td>
+            <td>{{seller.seller_address}}</td>
+        </tr>
+
+        <tr>
+            <td>District</td>
+            <td>{{seller.place.district.district_name}}</td>
+        </tr>
+
+        <tr>
+            <td>Place</td>
+            <td>{{seller.place.place_name}}</td>
+        </tr>
+
+        <tr>
+            <td>Date of Joining</td>
+            <td>{{seller.seller_doj}}</td>
+        </tr>
+
+        <tr>
+            <td>Date of Expiry</td>
+            <td>{{seller.seller_doe}}</td>
+        </tr>
+
+        <tr>
+            <td>Licence</td>
+            <td>{{seller.seller_licence}}</td>
+        </tr>
+
+        <tr>
+            <td>Proof</td>
+            <td>
+                {% if seller.seller_proof %}
+                    <a href="{{seller.seller_proof.url}}" class="file-link" target="_blank">View File</a>
+                {% else %}
+                    No File
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <td>Status</td>
+            <td>
+                {% if seller.seller_status == 1 %}
+                    Approved
+                {% else %}
+                    Pending
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <div class="buttons">
+        <a href="{% url 'Seller:SellerEditProfile' %}" class="edit-btn">Edit</a>
+        <a href="{% url 'Seller:SellerChangePassword' %}" class="pass-btn">Change Password</a>
+        <a href="{% url 'Guest:Login' %}" class="logout-btn">Logout</a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>District</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(to right, #d4fcf0, #ffffff);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #06432c;
+            margin-top: 30px;
+        }
+
+        /* FORM CARD */
+        .form-box {
+            width: 350px;
+            margin: 30px auto;
+            padding: 25px;
+            background: #1f7852;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            color: white;
+        }
+
+        .form-box label {
+            font-weight: bold;
+        }
+
+        .form-box input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+        }
+
+        .form-box input[type="submit"] {
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background: #043920;
+            border: none;
+            color: white;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .form-box input[type="submit"]:hover {
+            background: #021f12;
+        }
+
+        /* TABLE */
+        .table-container {
+            width: 70%;
+            margin: 30px auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #06432c;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        tr:hover {
+            background: #e6f7f2;
+        }
+
+        /* ACTION BUTTONS */
+        .action a {
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin: 2px;
+            color: white;
+        }
+
+        .edit {
+            background: #27ae60;
+        }
+
+        .delete {
+            background: #e74c3c;
+        }
+
+        .edit:hover {
+            background: #1e8449;
+        }
+
+        .delete:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>District</h1>
+
+    <!-- FORM -->
+    <div class="form-box">
+        <form method="post">
+            {% csrf_token %}
+
+            <label>District Name</label>
+            <input type="text" name="txtdist" value="{{data.district_name}}" required>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <!-- TABLE -->
+    <h1>District List</h1>
+
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Sl.No</th>
+                <th>District Name</th>
+                <th>Action</th>
+            </tr>
+
+            {% for i in dist %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.district_name}}</td>
+                <td class="action">
+                    <a href="{% url 'Admin:DistrictEdit' i.id %}" class="edit">Edit</a>
+                    <a href="{% url 'Admin:DistrictDelete' i.id %}" class="delete">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>

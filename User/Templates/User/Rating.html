@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        .box {
+            width: 400px;
+            margin: auto;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+        <h2>⭐ Rate Product</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="number" name="rating" placeholder="Rating (1-5)" required>
+            <textarea name="review" placeholder="Comment"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+
+    </div>
+</body>
+
+</html>

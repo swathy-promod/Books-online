@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef4ff, #dfe9ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .checkout-wrapper {
+            width: 100%;
+            max-width: 980px;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.16);
+        }
+
+        .summary-panel {
+            background: linear-gradient(160deg, #123c8c, #0b5ed7);
+            color: white;
+            padding: 42px 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 28px;
+        }
+
+        .brand-badge i {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.16);
+            font-size: 20px;
+        }
+
+        .summary-title {
+            font-size: 34px;
+            line-height: 1.2;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        .summary-text {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            max-width: 420px;
+        }
+
+        .payment-card-visual {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.06));
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 22px;
+            padding: 24px;
+            backdrop-filter: blur(6px);
+            margin-bottom: 28px;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 26px;
+        }
+
+        .chip {
+            width: 48px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f8d67a, #caa34d);
+        }
+
+        .signal {
+            font-size: 22px;
+            opacity: 0.9;
+        }
+
+        .visual-number {
+            font-size: 24px;
+            letter-spacing: 3px;
+            margin-bottom: 24px;
+            min-height: 30px;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .card-bottom span {
+            display: block;
+            font-size: 11px;
+            opacity: 0.75;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .summary-box {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.16);
+            padding: 18px 20px;
+            border-radius: 16px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.18);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .form-panel {
+            padding: 42px 34px;
+            background: #ffffff;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .form-header h2 {
+            font-size: 30px;
+            color: #14213d;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: #6c7a92;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .payment-icons {
+            display: flex;
+            gap: 10px;
+            font-size: 24px;
+            color: #2354c7;
+            margin-top: 6px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #21304e;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a7b9a;
+            font-size: 14px;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #d7dfef;
+            border-radius: 14px;
+            outline: none;
+            padding: 0 16px 0 42px;
+            font-size: 15px;
+            color: #17233b;
+            background: #f8fbff;
+            transition: 0.25s ease;
+        }
+
+        .input-wrap input:focus {
+            border-color: #0b5ed7;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(11, 94, 215, 0.08);
+        }
+
+        .inline-note {
+            font-size: 12px;
+            color: #7c8ba5;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .pay-button {
+            width: 100%;
+            margin-top: 24px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #0b5ed7, #0844a4);
+            color: white;
+            height: 56px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            cursor: pointer;
+            transition: 0.25s ease;
+            box-shadow: 0 12px 24px rgba(11, 94, 215, 0.2);
+        }
+
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 28px rgba(11, 94, 215, 0.24);
+        }
+
+        .secure-text {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6f7f97;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .checkout-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-panel,
+            .form-panel {
+                padding: 28px 22px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-title {
+                font-size: 28px;
+            }
+
+            .form-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-wrapper">
+        <div class="summary-panel">
+            <div>
+                <div class="brand-badge">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Secure Payment</span>
+                </div>
+
+                <h1 class="summary-title">Fast, protected, and smooth checkout experience.</h1>
+                <p class="summary-text">
+                    Complete your purchase using your card details below. Your payment section has been redesigned for a cleaner and more modern experience.
+                </p>
+
+                <div class="payment-card-visual">
+                    <div class="card-top">
+                        <div class="chip"></div>
+                        <div class="signal"><i class="fa-solid fa-wifi"></i></div>
+                    </div>
+
+                    <div class="visual-number" id="cardPreviewNumber">•••• •••• •••• ••••</div>
+
+                    <div class="card-bottom">
+                        <div>
+                            <span>Card Holder</span>
+                            <strong id="cardPreviewName">YOUR NAME</strong>
+                        </div>
+                        <div>
+                            <span>Expires</span>
+                            <strong id="cardPreviewExp">MM/YY</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>{{total}}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Processing</span>
+                    <span>Included</span>
+                </div>
+                <div class="summary-row">
+                    <span>Total Payment</span>
+                    <span>{{total}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-panel">
+            <div class="form-header">
+                <div>
+                    <h2>Payment Details</h2>
+                    <p>Enter your card information carefully to complete the payment.</p>
+                </div>
+
+                <div class="payment-icons">
+                    <i class="fa-brands fa-cc-visa"></i>
+                    <i class="fa-brands fa-cc-mastercard"></i>
+                    <i class="fa-brands fa-cc-paypal"></i>
+                </div>
+            </div>
+
+            <form action="" method="post" id="paymentForm">
+                {% csrf_token %}
+
+                <div class="form-grid">
+                    <div class="field full">
+                        <label for="cardNumber">Card Number</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-credit-card"></i>
+                            <input
+                                type="text"
+                                id="cardNumber"
+                                name="txtacno"
+                                placeholder="1234 5678 9012 3456"
+                                maxlength="19"
+                                autocomplete="off"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="field full">
+                        <label for="cardHolder">Card Holder Name</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-user"></i>
+                            <input
+                                type="text"
+                                id="cardHolder"
+                                name="txtname"
+                                placeholder="Enter card holder name"
+                                pattern="[a-zA-Z ]{3,30}"
+                                minlength="3"
+                                autocomplete="off"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="expiryDate">Expiry Date</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-calendar"></i>
+                            <input
+                                type="text"
+                                id="expiryDate"
+                                name="txtexpdate"
+                                placeholder="MM/YY"
+                                maxlength="5"
+                                autocomplete="off"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="cvvCode">CVV</label>
+                        <div class="input-wrap">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <input
+                                type="text"
+                                id="cvvCode"
+                                name="txtccv"
+                                placeholder="123"
+                                maxlength="3"
+                                autocomplete="off"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="field full">
+                        <label>Total Amount</label>
+                        <div class="input-wrap">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <input type="text" value="{{ booking.booking_amount }}" readonly>
+                        </div>
+                        <div class="inline-note">Please verify all payment information before submitting.</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="pay-button">
+                    <i class="fa-solid fa-lock"></i> Confirm Payment
+                </button>
+
+                <div class="secure-text">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Your transaction form is protected with client-side validation.</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if out %}
+    <script>
+        alert("NOT ENOUGH ITEM..!!");
+        window.location = "/Customer/mycart/";
+    </script>
+    {% endif %}
+
+    <script>
+        const cardNumberInput = document.getElementById("cardNumber");
+        const cardHolderInput = document.getElementById("cardHolder");
+        const expiryDateInput = document.getElementById("expiryDate");
+        const cvvCodeInput = document.getElementById("cvvCode");
+
+        const cardPreviewNumber = document.getElementById("cardPreviewNumber");
+        const cardPreviewName = document.getElementById("cardPreviewName");
+        const cardPreviewExp = document.getElementById("cardPreviewExp");
+
+        cardNumberInput.addEventListener("input", function () {
+            let value = this.value.replace(/\D/g, "").slice(0, 16);
+            let blocks = value.match(/.{1,4}/g);
+            this.value = blocks ? blocks.join(" ") : "";
+            cardPreviewNumber.textContent = this.value || "•••• •••• •••• ••••";
+        });
+
+        cardHolderInput.addEventListener("input", function () {
+            let cleaned = this.value.replace(/[^a-zA-Z ]/g, "");
+            this.value = cleaned;
+            cardPreviewName.textContent = cleaned.trim() ? cleaned.toUpperCase() : "YOUR NAME";
+        });
+
+        expiryDateInput.addEventListener("input", function () {
+            let value = this.value.replace(/\D/g, "").slice(0, 4);
+
+            if (value.length >= 3) {
+                value = value.slice(0, 2) + "/" + value.slice(2);
+            }
+
+            this.value = value;
+            cardPreviewExp.textContent = value || "MM/YY";
+        });
+
+        cvvCodeInput.addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, "").slice(0, 3);
+        });
+
+        document.getElementById("paymentForm").addEventListener("submit", function (e) {
+            const cardNumber = cardNumberInput.value.replace(/\s/g, "");
+            const holderName = cardHolderInput.value.trim();
+            const expiry = expiryDateInput.value.trim();
+            const cvv = cvvCodeInput.value.trim();
+
+            if (cardNumber.length !== 16) {
+                alert("Please enter a valid 16-digit card number.");
+                e.preventDefault();
+                return;
+            }
+
+            if (holderName.length < 3) {
+                alert("Please enter a valid card holder name.");
+                e.preventDefault();
+                return;
+            }
+
+            if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+                alert("Please enter expiry date in MM/YY format.");
+                e.preventDefault();
+                return;
+            }
+
+            const [monthStr, yearStr] = expiry.split("/");
+            const month = parseInt(monthStr, 10);
+            const year = parseInt(yearStr, 10);
+
+            const today = new Date();
+            const currentMonth = today.getMonth() + 1;
+            const currentYear = today.getFullYear() % 100;
+
+            if (month < 1 || month > 12) {
+                alert("Expiry month must be between 01 and 12.");
+                e.preventDefault();
+                return;
+            }
+
+            if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                alert("Card expiry date is invalid or already expired.");
+                e.preventDefault();
+                return;
+            }
+
+            if (!/^\d{3}$/.test(cvv)) {
+                alert("Please enter a valid 3-digit CVV.");
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

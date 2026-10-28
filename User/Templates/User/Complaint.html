@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f9f9f9;
+        }
+
+        .box {
+            width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+        }
+
+        button {
+            background: red;
+            color: #fff;
+            padding: 10px;
+            border: none;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+
+    <h2>⚠ Complaint - {{product.product_name}}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="Product" placeholder="Product" required>
+
+        <input type="text" name="title" placeholder="Title" required>
+        <textarea name="details" placeholder="Details" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Reply</th>
+        </tr>
+
+        {% for i in complaints %}
+        <tr>
+            <td>{{i.product.product_name}}</td>
+            <td>{{i.complaint_title}}</td>
+
+            <td>
+                {% if i.complaint_status == 0 %}
+                    Pending
+                {% elif i.complaint_status == 1 %}
+                    Replied
+                {% else %}
+                    Closed
+                {% endif %}
+            </td>
+
+            <td>{{i.complaint_reply}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>
