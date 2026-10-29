@@ -271,8 +271,17 @@
                 <span>Payment recorded successfully</span>
             </div>
 
+            <div style="margin: 20px 0 24px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <a href="{% url 'User:MyBookings' %}" style="display: inline-flex; align-items: center; gap: 8px; background: #00a86b; color: white; padding: 12px 26px; border-radius: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 20px rgba(0, 168, 107, 0.3);">
+                    View My Orders
+                </a>
+                <a href="{% url 'User:Products' %}" style="display: inline-flex; align-items: center; gap: 8px; background: #f0f4f8; color: #16324f; padding: 12px 22px; border-radius: 12px; font-weight: 600; text-decoration: none;">
+                    Explore More Books
+                </a>
+            </div>
+
             <div class="progress-area">
-                <div class="progress-label">Redirecting to homepage...</div>
+                <div class="progress-label">Redirecting to your orders...</div>
                 <div class="progress-track">
                     <div class="progress-fill"></div>
                 </div>
@@ -292,7 +301,7 @@
         document.getElementById("transactionId").textContent = createTransactionId();
 
         setTimeout(function () {
-            window.location.href = "{% url 'User:Homepage' %}";
+            window.location.href = "{% url 'User:MyBookings' %}";
         }, 8000);
     </script>
 </body>

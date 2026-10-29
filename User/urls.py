@@ -32,12 +32,8 @@ path('DeleteBooking/<int:id>/', views.DeleteBooking, name='DeleteBooking'),
 path('Booking/<int:id>/', views.Booking, name='Booking'),
 path('PaymentSuccess/', views.PaymentSuccess, name='PaymentSuccess'),
 path('Complaint/', views.Complaint, name='Complaint'),
+path('MyBookings/', views.MyBookings, name='MyBookings'),
+path('CancelBooking/<int:id>/', views.CancelBooking, name='CancelBooking'),
 path('Logout/', views.Logout , name="Logout"),
 
-
-
-
-
 ]
-
- 
