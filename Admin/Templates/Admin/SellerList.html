@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Management & Approvals - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #104f44;
+            --primary-dark: #0a3c37;
+            --primary-light: #167a6a;
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #0284c7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Top Header */
+        .top-navbar {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            padding: 16px 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-nav {
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            transition: 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 32px auto 60px;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* Stats Bar */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 18px 22px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-icon.total { background: #e0f2fe; color: var(--info); }
+        .stat-icon.pending { background: #fef3c7; color: var(--warning); }
+        .stat-icon.approved { background: #d1fae5; color: var(--success); }
+        .stat-icon.rejected { background: #fee2e2; color: var(--danger); }
+
+        .stat-info .num {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .stat-info .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Sections */
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafcfb;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pending-header h2 { color: #b45309; }
+        .approved-header h2 { color: #047857; }
+        .rejected-header h2 { color: #b91c1c; }
+
+        /* Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: #fbfcfd;
+        }
+
+        .seller-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            background: #f1f5f9;
+        }
+
+        .seller-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .seller-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-pending { background: #fef3c7; color: #b45309; }
+        .badge-approved { background: #d1fae5; color: #047857; }
+        .badge-rejected { background: #fee2e2; color: #b91c1c; }
+
+        /* Buttons */
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #059669;
+        }
+
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #dc2626;
+        }
+
+        .btn-proof {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #0284c7;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 12px;
+            background: #f0f9ff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #bae6fd;
+        }
+
+        .btn-proof:hover {
+            background: #e0f2fe;
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .empty-state i {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #d1d5db;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navigation -->
+    <header class="top-navbar">
+        <a href="{% url 'Admin:Homepage' %}" class="navbar-brand">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>LiterJoy Admin</span>
+        </a>
+        <div class="nav-actions">
+            <a href="{% url 'Admin:Homepage' %}" class="btn-nav">
+                <i class="fa-solid fa-arrow-left"></i> Dashboard
+            </a>
+            <a href="{% url 'Admin:UserList' %}" class="btn-nav">
+                <i class="fa-solid fa-users"></i> Users
+            </a>
+            <a href="{% url 'Guest:Logout' %}" class="btn-nav">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fa-solid fa-store"></i> Seller Management & Approvals</h1>
+            <p>Review new seller applications, verify credentials & proof documents, and manage active sellers.</p>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="num">{{ total_count }}</div>
+                    <div class="label">Total Registered</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="num">{{ pending_count }}</div>
+                    <div class="label">Pending Review</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="num">{{ accepted_count }}</div>
+                    <div class="label">Approved Sellers</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon rejected">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="num">{{ rejected_count }}</div>
+                    <div class="label">Rejected</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 1: PENDING APPROVALS -->
+        <div class="section-card">
+            <div class="section-header pending-header">
+                <h2>
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    <span>Pending Verification & Approvals ({{ pending_count }})</span>
+                </h2>
+            </div>
+
+            {% if pending %}
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Seller</th>
+                            <th>Contact Info</th>
+                            <th>Location</th>
+                            <th>Licence & Business</th>
+                            <th>Verification Proof</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in pending %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    {% if s.seller_photo %}
+                                        <img src="{{ s.seller_photo.url }}" class="seller-avatar" alt="{{ s.seller_name }}">
+                                    {% else %}
+                                        <div class="seller-avatar" style="display:flex;align-items:center;justify-content:center;color:#9ca3af;">
+                                            <i class="fa-solid fa-user"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <div class="seller-name">{{ s.seller_name }}</div>
+                                        <div class="seller-sub">Joined: {{ s.seller_doj }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div><i class="fa-regular fa-envelope" style="color:#9ca3af;"></i> {{ s.seller_email }}</div>
+                                <div class="seller-sub"><i class="fa-solid fa-phone" style="color:#9ca3af;"></i> {{ s.seller_contact }}</div>
+                            </td>
+                            <td>
+                                <div>{{ s.place.place_name }}</div>
+                                <div class="seller-sub">{{ s.place.district_id.district_name }}</div>
+                                <div class="seller-sub" style="max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ s.seller_address }}</div>
+                            </td>
+                            <td>
+                                <div>Licence: <strong>{{ s.seller_licence }}</strong></div>
+                                <div class="seller-sub">Est: {{ s.seller_doe }}</div>
+                            </td>
+                            <td>
+                                {% if s.seller_proof %}
+                                    <a href="{{ s.seller_proof.url }}" target="_blank" class="btn-proof">
+                                        <i class="fa-solid fa-file-arrow-down"></i> View Proof
+                                    </a>
+                                {% else %}
+                                    <span style="color:#9ca3af;">No Document</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-pending">
+                                    <i class="fa-solid fa-clock"></i> Pending
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 6px;">
+                                    <a href="{% url 'Admin:accSeller' s.id %}" class="btn-action btn-approve" onclick="return confirm('Approve {{ s.seller_name }} as verified seller?');">
+                                        <i class="fa-solid fa-check"></i> Approve
+                                    </a>
+                                    <a href="{% url 'Admin:rejSeller' s.id %}" class="btn-action btn-reject" onclick="return confirm('Reject application for {{ s.seller_name }}?');">
+                                        <i class="fa-solid fa-xmark"></i> Reject
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <p>No pending applications. All seller accounts have been reviewed!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- SECTION 2: APPROVED SELLERS -->
+        <div class="section-card">
+            <div class="section-header approved-header">
+                <h2>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Approved Active Sellers ({{ accepted_count }})</span>
+                </h2>
+            </div>
+
+            {% if accepted %}
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Seller</th>
+                            <th>Contact</th>
+                            <th>Location</th>
+                            <th>Licence</th>
+                            <th>Proof</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in accepted %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    {% if s.seller_photo %}
+                                        <img src="{{ s.seller_photo.url }}" class="seller-avatar" alt="{{ s.seller_name }}">
+                                    {% else %}
+                                        <div class="seller-avatar" style="display:flex;align-items:center;justify-content:center;color:#9ca3af;">
+                                            <i class="fa-solid fa-user"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <div class="seller-name">{{ s.seller_name }}</div>
+                                        <div class="seller-sub">{{ s.seller_email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ s.seller_contact }}</td>
+                            <td>{{ s.place.place_name }}, {{ s.place.district_id.district_name }}</td>
+                            <td>{{ s.seller_licence }}</td>
+                            <td>
+                                {% if s.seller_proof %}
+                                    <a href="{{ s.seller_proof.url }}" target="_blank" class="btn-proof">
+                                        <i class="fa-solid fa-file"></i> View
+                                    </a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-approved">
+                                    <i class="fa-solid fa-check"></i> Approved
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'Admin:rejSeller' s.id %}" class="btn-action btn-reject" onclick="return confirm('Revoke approval and block {{ s.seller_name }}?');">
+                                    <i class="fa-solid fa-ban"></i> Revoke
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fa-solid fa-store-slash"></i>
+                <p>No approved sellers yet.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- SECTION 3: REJECTED SELLERS -->
+        {% if rejected %}
+        <div class="section-card">
+            <div class="section-header rejected-header">
+                <h2>
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span>Rejected Seller Applications ({{ rejected_count }})</span>
+                </h2>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Seller</th>
+                            <th>Contact</th>
+                            <th>Location</th>
+                            <th>Licence</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in rejected %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div class="seller-name">{{ s.seller_name }}</div>
+                                <div class="seller-sub">{{ s.seller_email }}</div>
+                            </td>
+                            <td>{{ s.seller_contact }}</td>
+                            <td>{{ s.place.place_name }}, {{ s.place.district_id.district_name }}</td>
+                            <td>{{ s.seller_licence }}</td>
+                            <td>
+                                <span class="badge badge-rejected">
+                                    <i class="fa-solid fa-xmark"></i> Rejected
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'Admin:accSeller' s.id %}" class="btn-action btn-approve" onclick="return confirm('Re-approve {{ s.seller_name }} as verified seller?');">
+                                    <i class="fa-solid fa-rotate-left"></i> Re-approve
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
+

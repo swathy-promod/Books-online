@@ -115,12 +115,12 @@
                             </a>
                             <ul class="collapse first-level">
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="#">
+                                    <a class="sidebar-link" href="{% url 'Admin:UserList' %}">
                                         <i class="ti ti-circle"></i> User List
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="#">
+                                    <a class="sidebar-link" href="{% url 'Admin:SellerList' %}">
                                         <i class="ti ti-circle"></i> Seller List
                                     </a>
                                 </li>
@@ -243,24 +243,57 @@
                     <!--  Row 1 -->
                     <div class="row mt-3">
 
-                        <!-- Users Count -->
-                        <div class="col-md-6">
-                            <div class="card text-center p-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Users</h5>
-                                    <h2 class="fw-bold text-primary">{{ user_count }}</h2>
+                        {% if pending_seller_count > 0 %}
+                        <div class="col-12 mb-3">
+                            <div class="alert alert-warning d-flex align-items-center justify-content-between p-3" style="border-radius: 12px; background: #fffbeb; border: 1px solid #fde68a;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="ti ti-alert-triangle fs-6 text-warning"></i>
+                                    <div>
+                                        <strong>Action Required:</strong> You have <strong>{{ pending_seller_count }}</strong> seller registration(s) pending review and approval.
+                                    </div>
                                 </div>
+                                <a href="{% url 'Admin:SellerList' %}" class="btn btn-warning btn-sm fw-bold">Review Sellers</a>
                             </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Users Count -->
+                        <div class="col-md-4">
+                            <a href="{% url 'Admin:UserList' %}" class="text-decoration-none">
+                                <div class="card text-center p-3 shadow-sm hover-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-muted">Total Users</h5>
+                                        <h2 class="fw-bold text-primary">{{ user_count }}</h2>
+                                        <span class="text-primary fs-2">View User List &rarr;</span>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
 
                         <!-- Sellers Count -->
-                        <div class="col-md-6">
-                            <div class="card text-center p-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Sellers</h5>
-                                    <h2 class="fw-bold text-success">{{ seller_count }}</h2>
+                        <div class="col-md-4">
+                            <a href="{% url 'Admin:SellerList' %}" class="text-decoration-none">
+                                <div class="card text-center p-3 shadow-sm hover-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-muted">Total Sellers</h5>
+                                        <h2 class="fw-bold text-success">{{ seller_count }}</h2>
+                                        <span class="text-success fs-2">View Seller List &rarr;</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
+                        </div>
+
+                        <!-- Pending Sellers Count -->
+                        <div class="col-md-4">
+                            <a href="{% url 'Admin:SellerList' %}" class="text-decoration-none">
+                                <div class="card text-center p-3 shadow-sm hover-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-muted">Pending Approvals</h5>
+                                        <h2 class="fw-bold text-warning">{{ pending_seller_count }}</h2>
+                                        <span class="text-warning fs-2">Review Pending &rarr;</span>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                     <script src="{% static 'Admin/assets/libs/jquery/dist/jquery.min.js' %}"></script>
