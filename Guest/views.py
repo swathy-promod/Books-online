@@ -1,11 +1,12 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from .models import *
-from Admin.models import  *
+from Admin.models import *
 from .models import tbl_seller, tbl_place
 
 
 def Homepage(request):
-    return render(request,"Guest/Homepage.html")
+    return redirect("Guest:index")
+
 
 def Login(request):
     if request.method == 'POST':
@@ -21,21 +22,24 @@ def Login(request):
             return redirect("Admin:Homepage")
 
         elif user:
+            if user.user_status == 2:
+                return render(request, "Guest/Login.html", {"msg": "Your account has been deactivated by administrator."})
             request.session['uid'] = user.id
             return redirect("User:Homepage")
 
         elif seller:
             if seller.seller_status == 0:
-                return render(request, "Guest/Login.html", {"msg": "Pending approval"})
+                return render(request, "Guest/Login.html", {"msg": "Your account is pending admin approval."})
             elif seller.seller_status == 1:
                 request.session['sid'] = seller.id
                 return redirect("Seller:Homepage")
             elif seller.seller_status == 2:
-                return render(request, "Guest/Login.html", {"msg": "Rejected"})
-        
+                return render(request, "Guest/Login.html", {"msg": "Your seller registration was rejected by administrator."})
+
         return render(request, 'Guest/Login.html', {"msg": "Invalid email or password"})
 
     return render(request, 'Guest/Login.html')
+
 
 def UserRegistration(request):
     if request.method == 'POST':
@@ -45,7 +49,7 @@ def UserRegistration(request):
         contact = request.POST.get('txtcontact')
         gender = request.POST.get('gender')
         photo = request.FILES.get('txtfile')
-        bio = request.POST.get('txtbio')   
+        bio = request.POST.get('txtbio')
         district_id = request.POST.get("dis")
         place_id = request.POST.get("pla")
         district_obj = tbl_district.objects.get(id=district_id)
@@ -65,12 +69,13 @@ def UserRegistration(request):
         userdata = tbl_user.objects.all()
         disData = tbl_district.objects.all()
         pladata = tbl_place.objects.all()
-        return render(request,'Guest/UserRegistration.html', {
+        return render(request, 'Guest/UserRegistration.html', {
             'user': userdata,
             'pla': pladata,
             'disData': disData
         })
-   
+
+
 def SellerRegistration(request):
     disData = tbl_district.objects.all()
     pla = tbl_place.objects.all()
@@ -84,7 +89,7 @@ def SellerRegistration(request):
         photo = request.FILES.get("txt_photo")
         proof = request.FILES.get("txt_proof")
 
-        place_id = request.POST.get("pla")   # ✅ FIXED (was sel_place)
+        place_id = request.POST.get("pla")
         doj = request.POST.get("txt_doj")
         doe = request.POST.get("txt_doe")
         licence = request.POST.get("txt_licence")
@@ -102,7 +107,8 @@ def SellerRegistration(request):
             place=place,
             seller_doj=doj,
             seller_doe=doe,
-            seller_licence=licence
+            seller_licence=licence,
+            seller_status=0  # Pending approval
         )
 
         return redirect("Guest:SellerRegistration")
@@ -112,6 +118,7 @@ def SellerRegistration(request):
         "pla": pla
     })
 
+
 def ajaxplace(request):
     did = request.GET.get('did')
     placedata = tbl_place.objects.filter(district_id=did)
@@ -119,8 +126,9 @@ def ajaxplace(request):
 
 
 def Logout(request):
-    request.session.flush()   
-    return redirect('Guest:Login')   
-    
+    request.session.flush()
+    return redirect('Guest:Login')
+
+
 def index(request):
-    return render(request,'Guest/index.html')
+    return render(request, 'Guest/index.html')
